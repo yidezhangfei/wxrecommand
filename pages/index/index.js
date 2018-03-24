@@ -1,18 +1,67 @@
 // pages/index/index.js
+const util = require("../../utils/util.js")
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-  
+    winWidth:0,
+    winHeight:0,
+
+    // tab switch
+    currentTab: 0,
+
+    // collect data
+    datalist: [],
+    dataListDateCurrent: 0,
+    dataListDateCount: 0,
+
+    // daily data
+    dataThemes: [],
+
+    hotHidden: true,
+
+    // loading
+    hidden: true,
+
+    indicatorDots: false,
+    autoplay: false,
+    interval: 5000,
+    duration: 1000,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    var that = this;
+
+    wx.getSystemInfo({
+      success: function(res) {
+        that.setData({
+          winWidth: res.windowWidth,
+          winHeigh: res.windowWidth
+        });
+      },
+    })
+
+    that.setData(
+      { hidden: false }
+    )
+
+    // 请求日报
+    util.AJAX('news/latest', function(res){
+      var arr = res.data.top_stories;
+
+      console.log(res)
+
+      that.setData({
+        dataThemes: arr,
+      })
+    })
+
   },
 
   /**
